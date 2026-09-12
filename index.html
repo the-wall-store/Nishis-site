@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unwrap Your Gift</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url('bg1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Perspective Container */
+        .scene {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        /* Zoom Effect Class applied on opening */
+        .scene.zoom-in {
+            transform: scale(9) translateZ(400px);
+            opacity: 0;
+            transition: transform 1.5s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.4s ease-in 1s;
+        }
+
+        /* Top Heading Text with Black Outline */
+        .birthday-title {
+            color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-align: center;
+            letter-spacing: 1px;
+            
+            /* Black Outline Implementation */
+            -webkit-text-stroke: 1.5px #000000;
+            text-shadow: 
+                0 4px 10px rgba(0, 0, 0, 0.8),
+                -1px -1px 0 #000,  
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000;
+                 
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        /* 3D Box Wrapper */
+        .gift-box {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transform: rotateX(12deg) rotateZ(0deg);
+            transition: transform 0.3s ease;
+        }
+
+        .gift-box:hover {
+            transform: rotateX(16deg) scale(1.02);
+        }
+
+        /* Drop Shadow fitted exactly to the PNG edge */
+        .box-shadow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        /* Interior Void Revealed Behind the PNG as it lifts */
+        .box-interior {
+            position: absolute;
+            top: 2%;
+            left: 2%;
+            width: 96%;
+            height: 96%;
+            background: #000000;
+            border-radius: 12px;
+            opacity: 0;
+            z-index: 2;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Lid Wrapper */
+        .lid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('box.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+            z-index: 10;
+        }
+
+        /* Lid Open Animation State */
+        .gift-box.open .lid {
+            transform: translateY(-340px) rotateX(45deg) scale(0.7);
+            opacity: 0;
+        }
+
+        .gift-box.open .box-interior {
+            opacity: 1;
+        }
+
+        /* Click Hint Text with Black Outline */
+        .click-hint {
+            position: absolute;
+            bottom: 10%;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            
+            /* Black Outline Implementation */
+            -webkit-text-stroke: 1px #000000;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            
+            animation: pulse 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animation Stage -->
+    <div class="scene" id="scene">
+        <h1 class="birthday-title" id="title">Here's your gift birthday girl!</h1>
+
+        <div class="gift-box" id="giftBox">
+            <!-- Box Shadow & Interior Base -->
+            <div class="box-shadow"></div>
+            <div class="box-interior"></div>
+            
+            <!-- Box Image Lid -->
+            <div class="lid"></div>
+        </div>
+        
+        <div class="click-hint" id="hint">Click to open</div>
+    </div>
+
+    <script>
+        const giftBox = document.getElementById('giftBox');
+        const scene = document.getElementById('scene');
+        const hint = document.getElementById('hint');
+        const title = document.getElementById('title');
+
+        let isOpen = false;
+
+        giftBox.addEventListener('click', () => {
+            if (isOpen) return;
+            isOpen = true;
+
+            // Fade out text during animation
+            hint.style.opacity = '0';
+            title.style.opacity = '0';
+
+            // 1. Open Lid
+            giftBox.classList.add('open');
+
+            // 2. Zoom into box center
+            setTimeout(() => {
+                scene.classList.add('zoom-in');
+            }, 400);
+
+            // 3. Redirect to surprise.html as camera finishes zooming inside
+            setTimeout(() => {
+                window.location.href = 'surprise.html';
+            }, 1400);
+        });
+    </script>
+</body>
+</html>
