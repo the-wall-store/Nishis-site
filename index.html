@@ -1,205 +1,668 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unwrap Your Gift</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Nishi!</title>
+  <style>
+    /* Reset & Base Setup */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            background-image: url('bg1.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #520000;
+      color: #ffffff;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
 
-        /* Perspective Container */
-        .scene {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
-            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
-        }
+    /* Fixed Black Music Button Overlay */
+    .music-control-container {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 9999; /* Higher z-index to stay above all elements on mobile */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        /* Zoom Effect Class applied on opening */
-        .scene.zoom-in {
-            transform: scale(9) translateZ(400px);
-            opacity: 0;
-            transition: transform 1.5s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.4s ease-in 1s;
-        }
+    .music-btn {
+      background-color: #000000;
+      color: #ffffff;
+      border: 1.5px solid #ffffff;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s ease, background-color 0.2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        /* Top Heading Text with Black Outline */
-        .birthday-title {
-            color: #ffffff;
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 25px;
-            text-align: center;
-            letter-spacing: 1px;
-            
-            /* Black Outline Implementation */
-            -webkit-text-stroke: 1.5px #000000;
-            text-shadow: 
-                0 4px 10px rgba(0, 0, 0, 0.8),
-                -1px -1px 0 #000,  
-                 1px -1px 0 #000,
-                -1px  1px 0 #000,
-                 1px  1px 0 #000;
-                 
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-        }
+    .music-btn:hover {
+      transform: scale(1.05);
+      background-color: #1a1a1a;
+    }
 
-        /* 3D Box Wrapper */
-        .gift-box {
-            position: relative;
-            width: 320px;
-            height: 320px;
-            cursor: pointer;
-            transform-style: preserve-3d;
-            transform: rotateX(12deg) rotateZ(0deg);
-            transition: transform 0.3s ease;
-        }
+    .music-icon {
+      font-size: 12px;
+    }
 
-        .gift-box:hover {
-            transform: rotateX(16deg) scale(1.02);
-        }
+    /* Page Section Management */
+    .page-section {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+      z-index: 1;
+    }
 
-        /* Drop Shadow fitted exactly to the PNG edge */
-        .box-shadow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 16px;
-            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5);
-            z-index: 1;
-        }
+    .page-section.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 10;
+    }
 
-        /* Interior Void Revealed Behind the PNG as it lifts */
-        .box-interior {
-            position: absolute;
-            top: 2%;
-            left: 2%;
-            width: 96%;
-            height: 96%;
-            background: #000000;
-            border-radius: 12px;
-            opacity: 0;
-            z-index: 2;
-            transition: opacity 0.5s ease;
-        }
+    .hidden {
+      display: none !important;
+    }
 
-        /* Lid Wrapper */
-        .lid {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('box.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
-            z-index: 10;
-        }
+    /* Shared Next Button */
+    .next-btn {
+      padding: 10px 32px;
+      font-size: 17px;
+      font-weight: bold;
+      color: #ffffff;
+      background-color: #000000;
+      border: 2px solid #000000;
+      border-radius: 25px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s, background-color 0.2s;
+    }
 
-        /* Lid Open Animation State */
-        .gift-box.open .lid {
-            transform: translateY(-340px) rotateX(45deg) scale(0.7);
-            opacity: 0;
-        }
+    .next-btn:hover {
+      background-color: #1a1a1a;
+      transform: scale(1.05);
+    }
 
-        .gift-box.open .box-interior {
-            opacity: 1;
-        }
+    /* ========================================================
+       SECTION 1: UNWRAP GIFT (GIFT BOX)
+       ======================================================== */
+    #section-gift {
+      background-image: url('bg1.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      perspective: 1000px;
+      transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.6s ease, visibility 0.6s ease;
+    }
 
-        /* Click Hint Text with Black Outline */
-        .click-hint {
-            position: absolute;
-            bottom: 10%;
-            color: #ffffff;
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            
-            /* Black Outline Implementation */
-            -webkit-text-stroke: 1px #000000;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-            
-            animation: pulse 2s infinite;
-            pointer-events: none;
-        }
+    #section-gift.zoom-in {
+      transform: scale(9) translateZ(400px);
+      opacity: 0;
+      transition: transform 1.5s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.4s ease-in 1s;
+    }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: translateY(0); }
-            50% { opacity: 1; transform: translateY(-5px); }
-        }
-    </style>
+    .birthday-title {
+      color: #ffffff;
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 25px;
+      text-align: center;
+      letter-spacing: 1px;
+      -webkit-text-stroke: 1.5px #000000;
+      text-shadow: 
+        0 4px 10px rgba(0, 0, 0, 0.8),
+        -1px -1px 0 #000,  
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+
+    .gift-box {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transform: rotateX(12deg) rotateZ(0deg);
+      transition: transform 0.3s ease;
+    }
+
+    .gift-box:hover {
+      transform: rotateX(16deg) scale(1.02);
+    }
+
+    .box-shadow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .box-interior {
+      position: absolute;
+      top: 2%;
+      left: 2%;
+      width: 96%;
+      height: 96%;
+      background: #000000;
+      border-radius: 12px;
+      opacity: 0;
+      z-index: 2;
+      transition: opacity 0.5s ease;
+    }
+
+    .lid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('box.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+      z-index: 10;
+    }
+
+    .gift-box.open .lid {
+      transform: translateY(-340px) rotateX(45deg) scale(0.7);
+      opacity: 0;
+    }
+
+    .gift-box.open .box-interior {
+      opacity: 1;
+    }
+
+    .click-hint {
+      position: absolute;
+      bottom: 10%;
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      -webkit-text-stroke: 1px #000000;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      animation: pulse 2s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-5px); }
+    }
+
+    /* ========================================================
+       SECTION 2: CARD PAGE
+       ======================================================== */
+    #section-card {
+      background-color: #520000;
+      padding: 8px 10px;
+    }
+
+    .click-note {
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+      opacity: 0.9;
+      user-select: none;
+    }
+
+    .card-container {
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 12px;
+      width: 95vw;
+      max-width: 1100px;
+      height: 75vh;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* ========================================================
+       SECTION 3: PICS PAGE
+       ======================================================== */
+    #section-pics {
+      background-color: #520000;
+      padding: 15px 0;
+    }
+
+    .frame-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 25px;
+    }
+
+    .main-frame {
+      height: 580px;
+      width: auto;
+      display: block;
+    }
+
+    /* ========================================================
+       SECTION 4: LETTER PAGE
+       ======================================================== */
+    #section-letter {
+      background-color: #520000;
+      padding: 15px;
+      font-family: 'Georgia', serif;
+    }
+
+    .envelope-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .envelope-img {
+      width: 90vw;
+      max-width: 450px;
+      height: auto;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.5));
+    }
+
+    .envelope-wrapper:hover .envelope-img {
+      transform: scale(1.04);
+    }
+
+    .tap-hint {
+      color: #ffffff;
+      font-size: 16px;
+      margin-top: 15px;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+    }
+
+    .letter-container {
+      position: relative;
+      background: #fdf6e3;
+      background-image: radial-gradient(#f4ebd0 15%, transparent 16%),
+                        radial-gradient(#f4ebd0 15%, transparent 16%);
+      background-size: 60px 60px;
+      background-position: 0 0, 30px 30px;
+      color: #2b1e16;
+      width: 92vw;
+      max-width: 680px;
+      max-height: 78vh;
+      padding: 30px 25px 25px 25px;
+      border-radius: 6px;
+      border: 1px solid #d4c5a9;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 
+                  inset 0 0 40px rgba(160, 120, 80, 0.15);
+      overflow-y: auto;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .letter-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    .letter-container::-webkit-scrollbar-track {
+      background: rgba(212, 197, 169, 0.3);
+      border-radius: 4px;
+    }
+    .letter-container::-webkit-scrollbar-thumb {
+      background: #871200;
+      border-radius: 4px;
+    }
+
+    .polaroid-gallery {
+      float: right;
+      display: flex;
+      gap: 10px;
+      margin-left: 15px;
+      margin-bottom: 15px;
+      z-index: 5;
+    }
+
+    .polaroid {
+      background: #ffffff;
+      padding: 6px 6px 18px 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      width: 150px;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .polaroid:nth-child(1) {
+      transform: rotate(-6deg);
+    }
+    .polaroid:nth-child(2) {
+      transform: rotate(5deg);
+    }
+
+    .polaroid:hover {
+      transform: scale(1.1) rotate(0deg);
+      z-index: 10;
+    }
+
+    .polaroid img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+      border: 1px solid #eee;
+    }
+
+    .letter-content {
+      font-size: 17px;
+      line-height: 1.7;
+      color: #3a2312;
+      text-align: left;
+      white-space: pre-line;
+    }
+
+    .letter-content h2 {
+      font-family: 'Georgia', serif;
+      font-size: 24px;
+      margin-bottom: 15px;
+      color: #871200;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================================
+       MOBILE RESPONSIVE STYLES (Screens <= 768px)
+       ======================================================== */
+    @media (max-width: 768px) {
+      .music-control-container {
+        top: 12px;
+        right: 12px;
+      }
+
+      .music-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+
+      /* Card Section Mobile */
+      .card-container {
+        width: 98vw;
+        transition: height 0.3s ease;
+      }
+      .card-container.is-closed {
+        height: 62vh; 
+        margin-bottom: 8px;
+      }
+      #closedCard {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .card-container.is-open {
+        height: 62vh;
+        margin-bottom: 8px;
+      }
+      #openCard {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 50%;
+      }
+
+      /* Pics Section Mobile */
+      .frame-container {
+        margin-bottom: 15px;
+      }
+      .main-frame {
+        height: 500px;
+      }
+
+      /* Letter Section Mobile */
+      .letter-container {
+        padding: 20px 15px;
+        max-height: 80vh;
+      }
+      .polaroid {
+        width: 110px;
+        padding: 5px 5px 14px 5px;
+      }
+      .polaroid img {
+        height: 110px;
+      }
+      .letter-content {
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .letter-content h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Animation Stage -->
-    <div class="scene" id="scene">
-        <h1 class="birthday-title" id="title">Here's your gift birthday girl!</h1>
+  <!-- Audio Element -->
+  <audio id="bgSong" src="song.mp3" loop></audio>
 
-        <div class="gift-box" id="giftBox">
-            <!-- Box Shadow & Interior Base -->
-            <div class="box-shadow"></div>
-            <div class="box-interior"></div>
-            
-            <!-- Box Image Lid -->
-            <div class="lid"></div>
-        </div>
-        
-        <div class="click-hint" id="hint">Click to open</div>
+  <!-- Persistent Floating Music Button -->
+  <div class="music-control-container">
+    <button class="music-btn" id="musicToggleBtn" onclick="toggleAudio()" title="Toggle Song">
+      <span class="music-icon" id="musicIcon">▶</span>
+      <span>Tum Tak</span>
+    </button>
+  </div>
+
+  <!-- PAGE 1: GIFT UNWRAP -->
+  <section class="page-section active" id="section-gift">
+    <h1 class="birthday-title" id="title">Here's your gift birthday girl!</h1>
+
+    <div class="gift-box" id="giftBox">
+      <div class="box-shadow"></div>
+      <div class="box-interior"></div>
+      <div class="lid"></div>
+    </div>
+    
+    <div class="click-hint" id="hint">Click to open</div>
+  </section>
+
+  <!-- PAGE 2: BIRTHDAY CARD -->
+  <section class="page-section" id="section-card">
+    <div class="click-note" id="clickNote">✨ Tap card to open ✨</div>
+
+    <div class="card-container is-closed" id="birthdayCard" onclick="toggleCard()">
+      <img id="closedCard" class="card-img" src="closed-card.png" alt="Closed Birthday Card">
+      <img id="openCard" class="card-img hidden" src="open-card.png" alt="Open Birthday Card">
     </div>
 
-    <script>
-        const giftBox = document.getElementById('giftBox');
-        const scene = document.getElementById('scene');
-        const hint = document.getElementById('hint');
-        const title = document.getElementById('title');
+    <button class="next-btn" onclick="goToSection('section-pics')">Next →</button>
+  </section>
 
-        let isOpen = false;
+  <!-- PAGE 3: PICTURE FRAME -->
+  <section class="page-section" id="section-pics">
+    <div class="frame-container">
+      <img class="main-frame" src="frame.png" alt="Photo Frame">
+    </div>
 
-        giftBox.addEventListener('click', () => {
-            if (isOpen) return;
-            isOpen = true;
+    <button class="next-btn" onclick="goToSection('section-letter')">Next →</button>
+  </section>
 
-            // Fade out text during animation
-            hint.style.opacity = '0';
-            title.style.opacity = '0';
+  <!-- PAGE 4: LETTER -->
+  <section class="page-section" id="section-letter">
+    <!-- CLOSED ENVELOPE STATE -->
+    <div class="envelope-wrapper" id="envelopeScreen" onclick="openLetter()">
+      <img class="envelope-img" src="letterenv.png" alt="Open Letter Envelope">
+      <div class="tap-hint">✨ Tap envelope to open ✨</div>
+    </div>
 
-            // 1. Open Lid
-            giftBox.classList.add('open');
+    <!-- OPEN SCROLLABLE LETTER STATE -->
+    <div class="letter-container hidden" id="letterScreen">
+      <div class="polaroid-gallery">
+        <div class="polaroid">
+          <img src="photo1.jpg" alt="Memory 1">
+        </div>
+        <div class="polaroid">
+          <img src="photo2.jpg" alt="Memory 2">
+        </div>
+      </div>
 
-            // 2. Zoom into box center
-            setTimeout(() => {
-                scene.classList.add('zoom-in');
-            }, 400);
+      <div class="letter-content">
+        <h2>Dear Nishi,</h2>
 
-            // 3. Redirect to surprise.html as camera finishes zooming inside
-            setTimeout(() => {
-                window.location.href = 'surprise.html';
-            }, 1400);
-        });
-    </script>
+        <p>
+First of all, I thank God that I have you in my life — my favourite person. ❤️
+
+Mujhe nahi pata ki tumne mujhe kyun choose kiya, but I really like you — your vibe, the way you talk, the way you make me feel. There's just something about you that I can't properly put into words.
+
+Hum ek baar mite the, kabhi-kabhi ek saal mein sirf ek baar... but woh ek din bhi mere liye bohot special hota tha. 🥹❤️
+
+Tujhe yaad hai hum unexpectedly shaadi mein mile the? That scene was fucking crazy. 😂❤️ Main literally tumse baat karne ke liye tumhari taraf aa raha tha, but thoda darr bhi lag raha tha because tumhari mom bhi wahan thi. 🤐 But honestly, I enjoyed that whole day so much.
+
+Prajit Mamu ki shaadi... uff, kya din tha! ❤️
+Main tumhare saath tha, tumse baat kar raha tha, aur bas woh moment hi mere liye enough tha. I still remember that feeling.
+
+Aur ek aur cheez... jab mujhe love ka meaning bhi properly nahi pata tha, tabse tum mujhe like karti thi, jaise tumne khud mujhe bataya tha — that I was your crush. 🥹❤️
+
+Aur phir woh time jab tumne meri mummy ke phone par message kiya tha... 😂❤️
+Aur ek din maine finally tumhe call kiya, just to ask for your Snapchat ID. Bhai, that was crazy. 😂 Main tumhe call kar raha tha, nervous bhi tha, aur finally tumne apni Snap ID de di.
+
+Aur phir wahi se hamari first proper talks start hui.
+
+<strong>April 16, 2022.❤️</strong>
+
+2022 se lekar ab 2026 tak... somehow, through everything, we're still together. And honestly, I hope hum aise hi future mein bhi saath rahein. ❤️
+
+I don't know what the future has planned for us, but one thing I know — I want to keep making memories with you, keep annoying you, keep talking to you, keep laughing with you, and keep choosing you. 🎂
+
+On your special day, I just want to say...
+
+<strong>Happy Birthday to my favourite person, my special one, and the person who has been a beautiful part of my life since April 16, 2022. ❤️🎂</strong>
+
+I hope this year brings you everything you deserve — happiness, success, peace, lots of smiles, and all the love in the world.
+
+<strong>Happy Birthday, Nishi.❤️🎂✨
+Stay the same beautiful person you are.
+And please, stay with me for all the birthdays still waiting for us. 🎂❤️
+
+I love you.❤️</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    /* Audio Control Logic */
+    const bgSong = document.getElementById('bgSong');
+    const musicIcon = document.getElementById('musicIcon');
+
+    function toggleAudio() {
+      if (bgSong.paused) {
+        bgSong.play();
+        musicIcon.innerText = '❚❚';
+      } else {
+        bgSong.pause();
+        musicIcon.innerText = '▶';
+      }
+    }
+
+    /* Navigation Helper */
+    function goToSection(sectionId) {
+      document.querySelectorAll('.page-section').forEach(sec => {
+        sec.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    /* Section 1: Gift Unwrap Animation & Transition */
+    const giftBox = document.getElementById('giftBox');
+    const giftSection = document.getElementById('section-gift');
+    const hint = document.getElementById('hint');
+    const title = document.getElementById('title');
+    let isOpen = false;
+
+    giftBox.addEventListener('click', () => {
+      if (isOpen) return;
+      isOpen = true;
+
+      hint.style.opacity = '0';
+      title.style.opacity = '0';
+
+      giftBox.classList.add('open');
+
+      setTimeout(() => {
+        giftSection.classList.add('zoom-in');
+      }, 400);
+
+      setTimeout(() => {
+        goToSection('section-card');
+      }, 1400);
+    });
+
+    /* Section 2: Card Toggle */
+    function toggleCard() {
+      const container = document.getElementById('birthdayCard');
+      const closedCard = document.getElementById('closedCard');
+      const openCard = document.getElementById('openCard');
+      const note = document.getElementById('clickNote');
+
+      closedCard.classList.toggle('hidden');
+      openCard.classList.toggle('hidden');
+
+      const isClosed = container.classList.toggle('is-closed');
+      container.classList.toggle('is-open');
+
+      if (isClosed) {
+        note.innerText = '✨ Tap card to open ✨';
+      } else {
+        note.innerText = '✨ Tap card to close ✨';
+      }
+    }
+
+    /* Section 4: Letter Open */
+    function openLetter() {
+      const envelopeScreen = document.getElementById('envelopeScreen');
+      const letterScreen = document.getElementById('letterScreen');
+
+      envelopeScreen.classList.add('hidden');
+      letterScreen.classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>
