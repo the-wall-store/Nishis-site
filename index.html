@@ -2,31 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Happy Birthday Nishi!</title>
   <style>
-    /* Reset & Base Setup */
+    /* Reset & Viewport Constraints */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #520000;
-      color: #ffffff;
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
       overflow: hidden;
-      height: 100vh;
-      width: 100vw;
+      background-color: #520000;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffffff;
+      position: relative;
     }
 
-    /* Fixed Black Music Button Overlay */
+    /* Floating Black Music Button */
     .music-control-container {
       position: fixed;
-      top: 15px;
-      right: 15px;
-      z-index: 9999; /* Higher z-index to stay above all elements on mobile */
+      top: 12px;
+      right: 12px;
+      z-index: 99999;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -37,13 +39,13 @@
       color: #ffffff;
       border: 1.5px solid #ffffff;
       border-radius: 20px;
-      padding: 8px 16px;
-      font-size: 14px;
+      padding: 6px 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
       transition: transform 0.2s ease, background-color 0.2s ease;
       user-select: none;
@@ -56,12 +58,12 @@
     }
 
     .music-icon {
-      font-size: 12px;
+      font-size: 11px;
     }
 
-    /* Page Section Management */
+    /* Main Section Architecture */
     .page-section {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
@@ -107,7 +109,7 @@
     }
 
     /* ========================================================
-       SECTION 1: UNWRAP GIFT (GIFT BOX)
+       SECTION 1: UNWRAP GIFT
        ======================================================== */
     #section-gift {
       background-image: url('bg1.jpg');
@@ -116,6 +118,7 @@
       background-repeat: no-repeat;
       perspective: 1000px;
       transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.6s ease, visibility 0.6s ease;
+      padding: 20px;
     }
 
     #section-gift.zoom-in {
@@ -126,7 +129,7 @@
 
     .birthday-title {
       color: #ffffff;
-      font-size: 2.2rem;
+      font-size: clamp(1.4rem, 5vw, 2.2rem);
       font-weight: 800;
       margin-bottom: 25px;
       text-align: center;
@@ -140,12 +143,13 @@
          1px  1px 0 #000;
       transition: opacity 0.5s ease;
       pointer-events: none;
+      width: 100%;
     }
 
     .gift-box {
       position: relative;
-      width: 320px;
-      height: 320px;
+      width: min(300px, 70vw);
+      height: min(300px, 70vw);
       cursor: pointer;
       transform-style: preserve-3d;
       transform: rotateX(12deg) rotateZ(0deg);
@@ -205,9 +209,9 @@
 
     .click-hint {
       position: absolute;
-      bottom: 10%;
+      bottom: 8%;
       color: #ffffff;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -227,7 +231,7 @@
        ======================================================== */
     #section-card {
       background-color: #520000;
-      padding: 8px 10px;
+      padding: 10px;
     }
 
     .click-note {
@@ -247,20 +251,20 @@
       justify-content: center;
       align-items: center;
       margin-bottom: 12px;
-      width: 95vw;
+      width: 100%;
       max-width: 1100px;
-      height: 75vh;
+      height: 70vh;
     }
 
     .card-img {
-      width: 100%;
-      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
       display: block;
     }
 
     /* ========================================================
-       SECTION 3: PICS PAGE
+       SECTION 3: PICS PAGE (Restored original sizing)
        ======================================================== */
     #section-pics {
       background-color: #520000;
@@ -295,23 +299,20 @@
       justify-content: center;
       cursor: pointer;
       text-align: center;
+      width: 100%;
     }
 
     .envelope-img {
-      width: 90vw;
-      max-width: 450px;
+      width: 100%;
+      max-width: 420px;
       height: auto;
       transition: transform 0.3s ease, filter 0.3s ease;
       filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.5));
     }
 
-    .envelope-wrapper:hover .envelope-img {
-      transform: scale(1.04);
-    }
-
     .tap-hint {
       color: #ffffff;
-      font-size: 16px;
+      font-size: 15px;
       margin-top: 15px;
       font-family: Arial, sans-serif;
       letter-spacing: 0.5px;
@@ -326,10 +327,10 @@
       background-size: 60px 60px;
       background-position: 0 0, 30px 30px;
       color: #2b1e16;
-      width: 92vw;
-      max-width: 680px;
+      width: 100%;
+      max-width: 650px;
       max-height: 78vh;
-      padding: 30px 25px 25px 25px;
+      padding: 25px 20px;
       border-radius: 6px;
       border: 1px solid #d4c5a9;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 
@@ -338,69 +339,51 @@
       animation: fadeIn 0.6s ease-in-out;
     }
 
-    .letter-container::-webkit-scrollbar {
-      width: 8px;
-    }
-    .letter-container::-webkit-scrollbar-track {
-      background: rgba(212, 197, 169, 0.3);
-      border-radius: 4px;
-    }
-    .letter-container::-webkit-scrollbar-thumb {
-      background: #871200;
-      border-radius: 4px;
-    }
-
     .polaroid-gallery {
       float: right;
       display: flex;
       gap: 10px;
       margin-left: 15px;
       margin-bottom: 15px;
-      z-index: 5;
     }
 
     .polaroid {
       background: #ffffff;
-      padding: 6px 6px 18px 6px;
+      padding: 5px 5px 15px 5px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-      width: 150px;
+      width: 130px;
       text-align: center;
-      transition: transform 0.2s ease;
     }
 
-    .polaroid:nth-child(1) {
-      transform: rotate(-6deg);
-    }
-    .polaroid:nth-child(2) {
-      transform: rotate(5deg);
-    }
-
-    .polaroid:hover {
-      transform: scale(1.1) rotate(0deg);
-      z-index: 10;
-    }
+    .polaroid:nth-child(1) { transform: rotate(-6deg); }
+    .polaroid:nth-child(2) { transform: rotate(5deg); }
 
     .polaroid img {
       width: 100%;
-      height: 150px;
+      height: 130px;
       object-fit: cover;
       display: block;
       border: 1px solid #eee;
     }
 
     .letter-content {
-      font-size: 17px;
+      font-size: 16px;
       line-height: 1.7;
       color: #3a2312;
       text-align: left;
       white-space: pre-line;
+      word-break: break-word;
     }
 
     .letter-content h2 {
       font-family: 'Georgia', serif;
-      font-size: 24px;
-      margin-bottom: 15px;
+      font-size: 22px;
+      margin-bottom: 4px;
       color: #871200;
+    }
+
+    .letter-content p {
+      margin-top: 0;
     }
 
     @keyframes fadeIn {
@@ -408,46 +391,8 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ========================================================
-       MOBILE RESPONSIVE STYLES (Screens <= 768px)
-       ======================================================== */
+    /* Mobile Overrides */
     @media (max-width: 768px) {
-      .music-control-container {
-        top: 12px;
-        right: 12px;
-      }
-
-      .music-btn {
-        padding: 6px 12px;
-        font-size: 12px;
-      }
-
-      /* Card Section Mobile */
-      .card-container {
-        width: 98vw;
-        transition: height 0.3s ease;
-      }
-      .card-container.is-closed {
-        height: 62vh; 
-        margin-bottom: 8px;
-      }
-      #closedCard {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-      .card-container.is-open {
-        height: 62vh;
-        margin-bottom: 8px;
-      }
-      #openCard {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: 50% 50%;
-      }
-
-      /* Pics Section Mobile */
       .frame-container {
         margin-bottom: 15px;
       }
@@ -455,24 +400,20 @@
         height: 500px;
       }
 
-      /* Letter Section Mobile */
-      .letter-container {
-        padding: 20px 15px;
-        max-height: 80vh;
+      .polaroid-gallery {
+        float: none;
+        justify-content: center;
+        margin-left: 0;
+        margin-bottom: 15px;
       }
+
       .polaroid {
-        width: 110px;
-        padding: 5px 5px 14px 5px;
+        width: 100px;
+        padding: 4px 4px 10px 4px;
       }
+
       .polaroid img {
-        height: 110px;
-      }
-      .letter-content {
-        font-size: 15px;
-        line-height: 1.6;
-      }
-      .letter-content h2 {
-        font-size: 20px;
+        height: 95px;
       }
     }
   </style>
@@ -482,7 +423,7 @@
   <!-- Audio Element -->
   <audio id="bgSong" src="song.mp3" loop></audio>
 
-  <!-- Persistent Floating Music Button -->
+  <!-- Persistent Fixed Music Button -->
   <div class="music-control-container">
     <button class="music-btn" id="musicToggleBtn" onclick="toggleAudio()" title="Toggle Song">
       <span class="music-icon" id="musicIcon">▶</span>
@@ -526,13 +467,11 @@
 
   <!-- PAGE 4: LETTER -->
   <section class="page-section" id="section-letter">
-    <!-- CLOSED ENVELOPE STATE -->
     <div class="envelope-wrapper" id="envelopeScreen" onclick="openLetter()">
       <img class="envelope-img" src="letterenv.png" alt="Open Letter Envelope">
       <div class="tap-hint">✨ Tap envelope to open ✨</div>
     </div>
 
-    <!-- OPEN SCROLLABLE LETTER STATE -->
     <div class="letter-container hidden" id="letterScreen">
       <div class="polaroid-gallery">
         <div class="polaroid">
@@ -546,8 +485,7 @@
       <div class="letter-content">
         <h2>Dear Nishi,</h2>
 
-        <p>
-First of all, I thank God that I have you in my life — my favourite person. ❤️
+        <p>First of all, I thank God that I have you in my life — my favourite person. ❤️
 
 Mujhe nahi pata ki tumne mujhe kyun choose kiya, but I really like you — your vibe, the way you talk, the way you make me feel. There's just something about you that I can't properly put into words.
 
@@ -581,14 +519,12 @@ I hope this year brings you everything you deserve — happiness, success, peace
 Stay the same beautiful person you are.
 And please, stay with me for all the birthdays still waiting for us. 🎂❤️
 
-I love you.❤️</strong>
-        </p>
+I love you.❤️</strong></p>
       </div>
     </div>
   </section>
 
   <script>
-    /* Audio Control Logic */
     const bgSong = document.getElementById('bgSong');
     const musicIcon = document.getElementById('musicIcon');
 
@@ -602,7 +538,6 @@ I love you.❤️</strong>
       }
     }
 
-    /* Navigation Helper */
     function goToSection(sectionId) {
       document.querySelectorAll('.page-section').forEach(sec => {
         sec.classList.remove('active');
@@ -610,7 +545,6 @@ I love you.❤️</strong>
       document.getElementById(sectionId).classList.add('active');
     }
 
-    /* Section 1: Gift Unwrap Animation & Transition */
     const giftBox = document.getElementById('giftBox');
     const giftSection = document.getElementById('section-gift');
     const hint = document.getElementById('hint');
@@ -635,7 +569,6 @@ I love you.❤️</strong>
       }, 1400);
     });
 
-    /* Section 2: Card Toggle */
     function toggleCard() {
       const container = document.getElementById('birthdayCard');
       const closedCard = document.getElementById('closedCard');
@@ -655,7 +588,6 @@ I love you.❤️</strong>
       }
     }
 
-    /* Section 4: Letter Open */
     function openLetter() {
       const envelopeScreen = document.getElementById('envelopeScreen');
       const letterScreen = document.getElementById('letterScreen');
